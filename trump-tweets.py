@@ -58,14 +58,18 @@ def build_dataset(tweets_copy):
 
 
 def update_and_save_dataset(tweets_df):   
-    tweets_old_df = pd.read_csv("trump_tweets.csv")
-    print(f"past tweets: {tweets_old_df.shape}")
-    tweets_all_df = pd.concat([tweets_old_df, tweets_df], axis=0)
-    print(f"new tweets: {tweets_df.shape[0]} past tweets: {tweets_old_df.shape[0]} all tweets: {tweets_all_df.shape[0]}")
-    tweets_all_df.drop_duplicates(subset = ["user_name", "date", "text"], inplace=True)
-    print(f"all tweets: {tweets_all_df.shape}")
-    tweets_all_df.to_csv("trump_tweets.csv", index=False)
-
+    file_path = "trump_tweets.csv"
+    if os.path.exists(file_path):
+        tweets_old_df = pd.read_csv(file_path)
+        print(f"past tweets: {tweets_old_df.shape}")
+        tweets_all_df = pd.concat([tweets_old_df, tweets_df], axis=0)
+        print(f"new tweets: {tweets_df.shape[0]} past tweets: {tweets_old_df.shape[0]} all tweets: {tweets_all_df.shape[0]}")
+        tweets_all_df.drop_duplicates(subset = ["user_name", "date", "text"], inplace=True)
+        print(f"all tweets: {tweets_all_df.shape}")
+        tweets_all_df.to_csv(file_path, index=False)
+    else:
+        print(f"tweets: {tweets_df.shape}")
+        tweets_df.to_csv(file_path, index=False)
     
 if __name__ == "__main__":        
     api = twitter_connection()
